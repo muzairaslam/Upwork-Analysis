@@ -1,0 +1,36 @@
+---
+title: "EDA"
+format: html
+editor: visual
+---
+
+## Mean of Fixed Price Job 
+
+```{r}
+# calculate mean of fixed price job for each keyword
+plotdata <- data_selected %>%
+  group_by(search_keyword) %>%
+  summarize(mean_salary = mean(job_cost,na.rm = TRUE))
+```
+
+## Distribution of Jobs
+```{r}
+
+# How are they distributed ?
+
+p <- ggplot(eliminated, aes(x = search_keyword, y = job_cost)) +
+  geom_boxplot(size=1,
+               outlier.shape = 1,
+               outlier.color = "black",
+               outlier.size  = 3) +
+  scale_y_continuous(label = dollar) +
+  labs(title = "Job Cost", 
+       subtitle = "Outliers Removed Data",
+       x = "",
+       y = "") +
+  theme_minimal() +
+  theme(legend.position = "none") +
+  coord_flip()
+
+p
+```
