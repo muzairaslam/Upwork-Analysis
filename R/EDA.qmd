@@ -4,28 +4,27 @@ format: html
 editor: visual
 ---
 
-## Mean of Fixed Price Job 
+```{r}
+library(tidyverse)
+library(scales)
+library(here)
+```
+## Load the clean data
 
 ```{r}
-# calculate mean of fixed price job for each keyword
-plotdata <- data_selected %>%
-  group_by(search_keyword) %>%
-  summarize(mean_salary = mean(job_cost,na.rm = TRUE))
+data <- (read_csv(here("data/data_cleaned.csv")))
 ```
 
-## Distribution of Jobs
+## Distribution of Full Time Projects
 ```{r}
-
-# How are they distributed ?
-
-p <- ggplot(eliminated, aes(x = search_keyword, y = job_cost)) +
-  geom_boxplot(size=1,
+p <- ggplot(data, aes(x = search_keyword, y = job_cost, fill = search_keyword)) +
+  geom_boxplot(size = 1,
                outlier.shape = 1,
                outlier.color = "black",
                outlier.size  = 3) +
   scale_y_continuous(label = dollar) +
-  labs(title = "Job Cost", 
-       subtitle = "Outliers Removed Data",
+  labs(title = "Projects Cost by Keyword Search", 
+       subtitle = "Developers have Opportunities for High Value Projects",
        x = "",
        y = "") +
   theme_minimal() +
@@ -34,3 +33,68 @@ p <- ggplot(eliminated, aes(x = search_keyword, y = job_cost)) +
 
 p
 ```
+
+## Which Keyword gets higher Price Projects
+
+```{r}
+# calculate median of fixed price job for each keyword
+mean_project_prices_keyword <- data %>%
+  group_by(search_keyword) %>%
+  summarize(mean_project_value = mean(job_cost),
+            n = n())
+mean_project_prices_keyword
+```
+
+
+But we know that mean is subject to change in case of outliers. So we calculate medians
+
+```{r}
+# calculate median of fixed price job for each keyword
+median_project_prices_keyword <- data %>%
+  group_by(search_keyword) %>%
+  summarize(median_project_value = median(job_cost),
+              n = n())
+median_project_prices_keyword
+```
+
+
+- Data Science Projects on average gets $100 (n = 1578)
+- Developer Projects on average gets $150 (n = 11468)
+- Marketing Projects on average gets $150 (n = 6017)		
+
+
+## Distribution of Hourly Projects
+```{r}
+p <- ggplot(data, aes(x = search_keyword, y = job_cost, fill = search_keyword)) +
+  geom_boxplot(size = 1,
+               outlier.shape = 1,
+               outlier.color = "black",
+               outlier.size  = 3) +
+  scale_y_continuous(label = dollar) +
+  labs(title = "Projects Cost by Keyword Search", 
+       subtitle = "Developers have Opportunities for High Value Projects",
+       x = "",
+       y = "") +
+  theme_minimal() +
+  theme(legend.position = "none") +
+  coord_flip()
+
+p
+
+```
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+

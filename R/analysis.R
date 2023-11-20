@@ -33,18 +33,11 @@ data_selected$search_keyword <- factor(data_selected$search_keyword)
 
 # Data cleaning ---
 
-# If job is fixed price it should have job cost
-# If job is hourly it should have start rate and end rate.
-# Other cases to be removed
-
+# Remove Fixed price Jobs where NAs are there
+# Remove Hourly Jobs where NAs are there 
 data_cleaned <- data_selected |>
-  mutate(
-    job_verified = case_when(
-      payment_type == "Fixed-price" & is.na(job_cost) == FALSE ~ "Yes",
-      payment_type == "Hourly" & (start_rate > 0 & end_rate < 300) ~  "Yes"
-    )
-  ) |>
-  filter(job_verified == "Yes", job_cost < 20000)
+  filter(!is.na(job_cost) |!is.na(end_rate))
+
 
 # write cleaned data
 write.csv(x = data_cleaned, file = "data/data_cleaned.csv")
