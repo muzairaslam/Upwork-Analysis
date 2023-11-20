@@ -36,17 +36,10 @@ data_selected$search_keyword <- factor(data_selected$search_keyword)
 # Remove Fixed price Jobs where NAs are there
 # Remove Hourly Jobs where NAs are there 
 data_cleaned <- data_selected |>
-  filter(!is.na(job_cost) |!is.na(end_rate))
+  filter((!is.na(job_cost) & job_cost < 5000) | !is.na(end_rate))
 
 
 # write cleaned data
 write.csv(x = data_cleaned, file = "data/data_cleaned.csv")
-
-
-
-
-
-
-
 
 

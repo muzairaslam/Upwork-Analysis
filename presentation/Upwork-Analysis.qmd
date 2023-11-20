@@ -1,0 +1,228 @@
+---
+title: "Upwork Market Analysis"
+author: "Uzair Aslam"
+echo: true
+format: revealjs
+editor: visual
+---
+
+## Loading Packages
+
+```{r}
+library(tidyverse)
+library(scales)
+library(gt)
+library(here)
+library(plotly)
+library(janitor)
+```
+
+## Load the raw data
+
+```{r}
+data <- (read_csv(here("data/data.csv")))
+dim(data)
+```
+
+## Selecting Coloumns 
+
+```{r}
+# select columns for analysis
+data_selected <- data |>
+  clean_names() |>
+  select(job_title, 
+         search_keyword,
+         category_1,
+         category_2,
+         payment_situation,
+         client_country,
+         payment_type,
+         job_cost,
+         start_rate,
+         end_rate)
+
+
+```
+
+## Data cleaning
+
+```{r}
+#| output-location: fragment
+
+# correct data types
+data_selected$search_keyword <- factor(data_selected$search_keyword)
+
+# Remove Fixed price Jobs where NAs are there
+# Remove Hourly Jobs where NAs are there 
+data_cleaned <- data_selected |>
+  filter((!is.na(job_cost) & job_cost < 5000) | !is.na(end_rate))
+
+dim(data_cleaned)
+```
+
+
+
+## Distribution of Full Time Projects
+```{r, warning=FALSE}
+#| output-location: slide
+
+p <- ggplot(data_cleaned, aes(x = search_keyword, y = job_cost, fill = search_keyword)) +
+  geom_boxplot(size = 1,
+               outlier.shape = 1,
+               outlier.color = "black",
+               outlier.size  = 3) +
+  scale_y_continuous(label = dollar) +
+  labs(title = "Fixed Project Cost by Keyword Search", 
+       subtitle = "Developers Seize High-Value Project Opportunities",
+       x = "",
+       y = "") +
+  theme_minimal() +
+  theme(legend.position = "none") +
+  coord_flip()
+
+ggplotly(p) 
+```
+
+
+## Fixed Price And Hourly Jobs
+```{r}
+#| output-location: slide
+
+# calculate median of fixed price job for each keyword
+median_project_prices_keyword <- data_cleaned |>
+  group_by(search_keyword) |>
+  summarize(fixed_price_project_value = median(job_cost, na.rm = TRUE),
+            hourly_start_rate = median(start_rate, na.rm = TRUE),
+            hourly_end_rate = median(end_rate, na.rm = TRUE),
+            one_time_projects = sum(payment_type == "Fixed-price"),
+            hourly_projects = sum(payment_type == "Hourly"),
+            total_projects = n()) |>
+  arrange(desc(fixed_price_project_value)) |>
+  gt() |>
+  tab_header(
+    title = md("**Median One Time Projects / Hourly Contracts**"),
+  ) |>
+  fmt_number(columns = c(fixed_price_project_value, hourly_start_rate, hourly_end_rate ),
+             decimals = 1) |>
+  tab_spanner(
+  label = "Fixed",
+  columns = c(fixed_price_project_value, one_time_projects)
+  ) |>
+  tab_spanner(
+  label = "Hourly",
+  columns = c(hourly_start_rate, hourly_end_rate,hourly_projects)
+  ) |>
+  cols_label(
+    search_keyword = "Keyword",
+    fixed_price_project_value = "Cost",
+    hourly_start_rate = "Start Rate",
+    hourly_end_rate = "End Rate",
+    one_time_projects = "Sample size",
+    hourly_projects = "Sample size",
+    total_projects = "Total sample"
+  )
+  
+median_project_prices_keyword
+```
+
+## Upwork Client's Top Developer categories?
+
+```{r}
+#| output-location: slide
+
+bar_cat_1_dev <- data_cleaned |>
+  filter(search_keyword == "Developer") |>
+  group_by(search_keyword,category_1) |>
+  summarise(count = n()) |>
+  mutate(freq = formattable::percent(count / sum(count))) |>
+  arrange(desc(count)) |>
+  top_n(n = 10) |>
+  ggplot(aes(x = reorder(category_1, freq), y = freq, fill = category_1)) +
+  geom_bar(stat = "identity") +
+  scale_colour_viridis_b(alpha = 0.8) +
+  geom_text(aes(label = paste0(freq)), position = position_stack(vjust = 1.05), size = 3.5)  + 
+  coord_flip() +
+  scale_y_continuous(labels = scales::percent,
+                     breaks = scales::breaks_pretty(n = 8)) +
+  theme_minimal() +
+  labs(title = "") +
+  xlab("Skills") +
+  ylab("Percentage of responses")
+
+bar_cat_1_dev
+```
+
+
+##  Upwork Client's Top Marketing categories?
+
+```{r}
+#| output-location: slide
+
+bar_cat_1_mkg <- data_cleaned |>
+  filter(search_keyword == "Marketing") |>
+  group_by(search_keyword,category_1) |>
+  summarise(count = n()) |>
+  mutate(freq = formattable::percent(count / sum(count))) |>
+  arrange(desc(count)) |>
+  top_n(n = 10) |>
+  ggplot(aes(x = reorder(category_1, freq), y = freq, fill = category_1)) +
+  geom_bar(stat = "identity") +
+  scale_colour_viridis_d(alpha = 0.8) +
+  geom_text(aes(label = paste0(freq)), position = position_stack(vjust = 1.05), size = 3.5)  + 
+  coord_flip() +
+  scale_y_continuous(labels = scales::percent,
+                     breaks = scales::breaks_pretty(n = 8)) +
+  theme_minimal() +
+  labs(title = "") +
+  xlab("Skills") +
+  ylab("Percentage of responses")
+
+bar_cat_1_mkg
+```
+
+## Upwork Client's Top Data Science categories?
+
+```{r}
+#| output-location: slide
+
+bar_cat_1_data_science <- data_cleaned |>
+  filter(search_keyword == "Data_science") |>
+  group_by(search_keyword,category_1) |>
+  summarise(count = n()) |>
+  mutate(freq = formattable::percent(count / sum(count))) |>
+  arrange(desc(count)) |>
+  top_n(n = 10) |>
+  ggplot(aes(x = reorder(category_1, freq), y = freq, fill = category_1)) +
+  geom_bar(stat = "identity") +
+  scale_colour_viridis_d(alpha = 0.8) +
+  geom_text(aes(label = paste0(freq)), position = position_stack(vjust = 1.05), size = 3.5)  + 
+  coord_flip() +
+  scale_y_continuous(labels = scales::percent,
+                     breaks = scales::breaks_pretty(n = 8)) +
+  theme_minimal() +
+  labs(title = "") +
+  xlab("Skills") +
+  ylab("Percentage of responses")
+
+bar_cat_1_data_science
+```
+
+
+## Which region clients pay higher for all Jobs? 
+
+```{r, warning=FALSE}
+#| output-location: slide
+
+data_cleaned |>
+  group_by(client_country) |>
+  summarise(average_pay = median(start_rate, na.rm = TRUE)) |>
+  arrange(desc(average_pay)) |>
+  top_n(n = 10) |>
+  gt()
+```
+
+
+## Thank you
+
+
+
