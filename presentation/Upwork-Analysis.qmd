@@ -1,11 +1,46 @@
 ---
-title: "Upwork Market Analysis"
+title: "First R User Meet Up (Karachi)"
 author: "Uzair Aslam"
 echo: true
 format: revealjs
 incremental: true
 editor: visual
 ---
+
+# Introductions
+
+## Tell us about:
+
+- Your Name
+- Your Industry
+- Used R before ?
+
+## Why are you here ?
+
+- I am student and wants to learn R.
+- I work in Industry and wants to learn Business Data Analysis.
+- I am in Academia and wants to see how R can be used in Research.
+- Just for Fun!
+
+## Karachi R User Group is for you!
+
+- Part of 92 Groups world wide with 79,564 members
+- Networking Opportunity with your industry professionals
+- Learn about recent developments in R Ecosystem
+- Become a Speaker!
+- Give back to community
+
+## We are the 37th Country to host R Group 
+
+![](r-user-group-in-pakistan.png)
+
+## My Introduction
+
+# Data Analysis of Upwork Market
+
+Give Overview...
+
+# Overview
 
 ## Loading Packages
 
@@ -253,7 +288,29 @@ data_cleaned |>
 ```
 
 
-# Question & Comments ?
+# Questions & Comments ?
+
+
+## Announcements
+
+- We need a venue to physically host these meetups.
+
+- The venue should be in Karachi.
+
+- It must have a projector
+
+- It can be a company, institute or someone's place 
+
+- Any ideas for Physical Meetup Location ?
+
+
+## Join the Army
+
+
+Links of Presentation and R User Group
+
+
+
 
 
 
