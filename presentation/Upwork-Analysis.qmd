@@ -3,6 +3,7 @@ title: "Upwork Market Analysis"
 author: "Uzair Aslam"
 echo: true
 format: revealjs
+incremental: true
 editor: visual
 ---
 
@@ -30,21 +31,33 @@ dim(data)
 # select columns for analysis
 data_selected <- data |>
   clean_names() |>
-  select(job_title, 
-         search_keyword,
+  select(search_keyword,
          category_1,
-         category_2,
          payment_situation,
          client_country,
          payment_type,
          job_cost,
          start_rate,
          end_rate)
-
-
 ```
 
-## Data cleaning
+::: {.incremental}
+
+## View of Data Set
+
+```{r}
+head(data_selected) |>
+  gt()
+```
+
+```{r}
+dim(data_selected)
+```
+:::
+
+# Data cleaning
+
+## Data Types Correction and Filtering
 
 ```{r}
 #| output-location: fragment
@@ -52,17 +65,22 @@ data_selected <- data |>
 # correct data types
 data_selected$search_keyword <- factor(data_selected$search_keyword)
 
-# Remove Fixed price Jobs where NAs are there
-# Remove Hourly Jobs where NAs are there 
+# remove fixed price jobs where NAs are there
+# keep fixed prices projects with max client budget of $5000 
+# remove hourly contracts where end rate is not given by the client 
 data_cleaned <- data_selected |>
   filter((!is.na(job_cost) & job_cost < 5000) | !is.na(end_rate))
 
 dim(data_cleaned)
 ```
+```{r}
+data_remains <- (nrow(data_cleaned)/nrow(data_selected)) * 100
+print(data_remains)
+```
 
+# Exploratory Data Analysis (EDA)
 
-
-## Distribution of Full Time Projects
+## Distribution of Fixed Cost Projects
 ```{r, warning=FALSE}
 #| output-location: slide
 
@@ -84,7 +102,7 @@ ggplotly(p)
 ```
 
 
-## Fixed Price And Hourly Jobs
+## Fixed Price Vs Hourly Jobs
 ```{r}
 #| output-location: slide
 
@@ -94,36 +112,49 @@ median_project_prices_keyword <- data_cleaned |>
   summarize(fixed_price_project_value = median(job_cost, na.rm = TRUE),
             hourly_start_rate = median(start_rate, na.rm = TRUE),
             hourly_end_rate = median(end_rate, na.rm = TRUE),
-            one_time_projects = sum(payment_type == "Fixed-price"),
+            mid_range =  (hourly_start_rate + hourly_end_rate)/2,
+            fixed_price_project = sum(payment_type == "Fixed-price"),
+            fixed_price_earnings = fixed_price_project * fixed_price_project_value,
             hourly_projects = sum(payment_type == "Hourly"),
+            hourly_project_earnings = hourly_projects * mid_range,
             total_projects = n()) |>
   arrange(desc(fixed_price_project_value)) |>
   gt() |>
   tab_header(
     title = md("**Median One Time Projects / Hourly Contracts**"),
   ) |>
-  fmt_number(columns = c(fixed_price_project_value, hourly_start_rate, hourly_end_rate ),
-             decimals = 1) |>
+  fmt_number(columns = c(fixed_price_project_value, hourly_start_rate, hourly_end_rate, mid_range,hourly_project_earnings, fixed_price_earnings), decimals = 1) |>
   tab_spanner(
   label = "Fixed",
-  columns = c(fixed_price_project_value, one_time_projects)
+  columns = c(fixed_price_project_value, fixed_price_project, fixed_price_earnings)
   ) |>
   tab_spanner(
   label = "Hourly",
-  columns = c(hourly_start_rate, hourly_end_rate,hourly_projects)
+  columns = c(hourly_start_rate, hourly_end_rate, mid_range, hourly_projects, hourly_project_earnings)
   ) |>
   cols_label(
     search_keyword = "Keyword",
     fixed_price_project_value = "Cost",
     hourly_start_rate = "Start Rate",
     hourly_end_rate = "End Rate",
-    one_time_projects = "Sample size",
+    fixed_price_project = "Sample size",
     hourly_projects = "Sample size",
-    total_projects = "Total sample"
+    total_projects = "Total sample",
+    hourly_project_earnings = "Earnings ($)",
+    mid_range = "Mid Rate",
+    fixed_price_earnings = "Earnings ($)"
   )
   
 median_project_prices_keyword
 ```
+
+## Insights for Freelancers
+
+- Data Science Projects on average gets $100 (n = 1578)
+- Development Projects on average gets $150 (n = 11468)
+- Marketing Projects on average gets $150 (n = 6017)		
+- Data Science professionals should focus for Hourly Contracts or come outside of Upwork.
+
 
 ## Upwork Client's Top Developer categories?
 
@@ -222,7 +253,7 @@ data_cleaned |>
 ```
 
 
-## Thank you
+# Question & Comments ?
 
 
 
