@@ -17,11 +17,11 @@ format:
 
 - My name is Uzair Aslam
 - Founder and Data Scientist @ [Stat Devs](https://statdevs.com/), a Data Analytics Company.
-- Consulted @ Cube Statistica as Junior Data Scientist.
+- Consulted @ Cube Statistica, Canada, as Junior Data Scientist.
 - Worked as Data Analyst for Indus Hospital & Health Networks.
 - BSc Economics & Math, IBA (2022)
-- Find me on [Linked In](https://www.linkedin.com/in/uzairdatascientist/) 
-- Find me on [Github](https://github.com/muzairaslam)
+- Find me on [{{< fa brands linkedin >}}](https://www.linkedin.com/in/uzairdatascientist/) 
+- Find me on [{{< fa brands github >}}](https://github.com/muzairaslam)
 
 ## Tell us about:
 
@@ -358,16 +358,20 @@ data_cleaned |>
 
 ## Join the Groups
 
-[MeetUp](https://www.meetup.com/karachi-r-user-group/)
-
-[Slack](https://www.linkedin.com/safety/go?url=https%3A%2F%2Fjoin.slack.com%2Ft%2Fkarachirusergroup%2Fsignup&trk=flagship-messaging-web&messageThreadUrn=urn%3Ali%3AmessagingThread%3A2-ODI5MmY5ZTEtZWMyNS00ZWRkLWI0YTEtZjE3NjcwMGY2Yzg2XzAxMw%3D%3D&lipi=urn%3Ali%3Apage%3Ad_flagship3_messaging_conversation_detail%3Bbl1pkvm0TUC0eXpHb0U8bQ%3D%3D)
+[{{< fa brands meetup >}}](https://www.meetup.com/karachi-r-user-group/)
 
 
+[{{< fa brands slack >}}](https://www.linkedin.com/safety/go?url=https%3A%2F%2Fjoin.slack.com%2Ft%2Fkarachirusergroup%2Fsignup&trk=flagship-messaging-web&messageThreadUrn=urn%3Ali%3AmessagingThread%3A2-ODI5MmY5ZTEtZWMyNS00ZWRkLWI0YTEtZjE3NjcwMGY2Yzg2XzAxMw%3D%3D&lipi=urn%3Ali%3Apage%3Ad_flagship3_messaging_conversation_detail%3Bbl1pkvm0TUC0eXpHb0U8bQ%3D%3D)
 
-## Data Sources
+
+
+## Data Sources and Slide Link
 
 [Upwork Statistics](https://www.lucatagliaferro.com/post/upwork-statistics-trends/)
 
+Slides:
+
+[{{< fa brands github >}}](https://github.com/muzairaslam/Upwork-Analysis)
 
 # Thank you!
 
