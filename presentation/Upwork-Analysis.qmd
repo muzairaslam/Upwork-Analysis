@@ -9,6 +9,7 @@ format:
     incremental: true
     theme: styles.css
     logo: kar-r-user-group.png
+  
 ---
 
 # Introductions
